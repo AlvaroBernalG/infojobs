@@ -20,7 +20,7 @@ const infojobs = require('infojobs')
 const search = infojobs({
   user: 'my_user_id', 
   password: 'my_secret_password'  
-}) // => this credentials are obtained in https://developer.infojobs.net/
+}) // => these credentials are obtained on https://developer.infojobs.net/
 
 search()
   .offer()
@@ -30,10 +30,11 @@ search()
 }).catch(console.log)
 ```
 
-You can narrow the search by passing a literal object representing a [query](https://developer.infojobs.net/documentation/operation/offer-list-1.xhtml):
+You can narrow the search by passing a literal object containing a [query](https://developer.infojobs.net/documentation/operation/offer-list-1.xhtml):
+
 ```js
 
-infojobs()
+search()
   .offer({ 
     q: 'Java developer',
     province: 'Madrid',
@@ -47,9 +48,9 @@ infojobs()
 
 You can retrieve a specific job offer by specifiying its id using the id method:
 ```js
-infojobs()
+search()
   .offer()
-  .id('secretIdOfJobOffer')
+  .id('jobOfferId234234234414')
   .run()
   .then( reponse => {
       console.log(response) 
