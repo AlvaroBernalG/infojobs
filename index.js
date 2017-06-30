@@ -1,7 +1,7 @@
 const request = require('request')
 const { URL } = require('url')
 
-const api_url = 'https://api.infojobs.net/api/1' 
+const api_url = 'https://api.infojobs.net/api/1'
 
 const resources = [
   'offer',
@@ -44,8 +44,6 @@ const buildUrl = (base) => {
     })
   })
 
-  inner.getURL = () => url
-
   inner.toString = () => url.toString()
 
   return inner
@@ -53,7 +51,8 @@ const buildUrl = (base) => {
 
 const infojobs = (auth) => {
   const get = requester(auth)
-  return (url = buildUrl(api_url)) => {
+  return () => {
+    const url = buildUrl(api_url)
     const inner = {}
     const innerChained = chain(inner)
 

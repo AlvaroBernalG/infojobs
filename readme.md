@@ -31,7 +31,6 @@ search()
 ```
 
 You can narrow the search by passing a literal object containing a [query](https://developer.infojobs.net/documentation/operation/offer-list-1.xhtml):
-
 ```js
 
 search()
