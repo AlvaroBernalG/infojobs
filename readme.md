@@ -18,8 +18,8 @@ Basic usage:
 const infojobs = require('infojobs')
 
 const search = infojobs({
-  user: 'my_user_id',
-  password: 'my_secret_password'  
+  id: 'api_id',
+  secret: 'api_secret'  
 }) // => these credentials are obtained on https://developer.infojobs.net/
 
 search()

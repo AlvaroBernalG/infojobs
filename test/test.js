@@ -1,11 +1,11 @@
-// const fs = require('fs')
+const fs = require('fs')
 const infojobs = require('../index.js')
 
-// let credentials = JSON.parse(fs.readFileSync('./test/credentials.json', 'utf-8'))
+const credentials = JSON.parse(fs.readFileSync('../config/credentials.json', 'utf-8'))
 
 describe('infojobs()', () => {
   it('should be a high order function', () => {
-    expect(typeof infojobs({user: '', password: ''}) === 'function').toBe(true)
+    expect(typeof infojobs(credentials) === 'function').toBe(true)
   })
 })
 

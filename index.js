@@ -25,7 +25,7 @@ const requester = (auth) => (url) => new Promise((resolve, reject) => {
     } catch (err) {
       reject(err)
     }
-  }).auth(auth.user, auth.password)
+  }).auth(auth.id, auth.secret)
 })
 
 const buildUrl = (base) => {
