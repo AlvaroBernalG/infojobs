@@ -23,6 +23,7 @@
     "portal",
     "job"
   ],
+  "engine": "8.6",
   "author": {
     "name": "Alvaro Bernal Gimeno",
     "email": "alvaro.bernal.gimeno@gmail.com"

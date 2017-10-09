@@ -1,7 +1,8 @@
 const fs = require('fs')
 const infojobs = require('../index.js')
 
-const credentials = JSON.parse(fs.readFileSync('../config/credentials.json', 'utf-8'))
+// const credentials = JSON.parse(fs.readFileSync('../config/credentials.json', 'utf-8'))
+const credentials = {}
 
 describe('infojobs()', () => {
   it('should be a high order function', () => {
