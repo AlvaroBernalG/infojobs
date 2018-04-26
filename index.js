@@ -51,21 +51,24 @@ const buildUrl = (base) => {
 
 const infojobs = (auth) => {
   const get = requester(auth)
-  return () => {
+  return (searchQuery) => {
     const url = buildUrl(api_url)
     const inner = {}
     const innerChained = chain(inner)
 
     resources.forEach(resource => {
-      inner[resource] = innerChained(query => {
+      inner[resource] = innerChained(() => {
         url.addPath(resource)
-        query && url.addQuery(query)
+        searchQuery && url.addQuery(searchQuery)
       })
     })
 
     inner.id = innerChained(id => url.addPath(id))
 
-    inner.go = inner.start = inner.run = () => get(url.toString())
+    inner.go = inner.start = inner.run = () => {
+      const fullUrl = url.toString()
+      return get(fullUrl)
+    }
 
     return inner
   }
