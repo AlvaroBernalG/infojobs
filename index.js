@@ -65,6 +65,15 @@ const infojobs = (auth) => {
 
     inner.id = innerChained(id => url.addPath(id))
 
+    inner.pages = async function*() {
+      let pageNumber = 0
+      while(true) {
+        yield await inner.go({page: pageNumber });
+        pageNumber += 1
+      }
+    }
+
+
     inner.go = inner.start = inner.run = () => {
       const fullUrl = url.toString()
       return get(fullUrl)

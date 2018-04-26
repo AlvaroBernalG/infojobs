@@ -2,7 +2,7 @@ const fs = require('fs')
 const infojobs = require('../index.js')
 const nock = require("nock")
 
-const credentials = require('./config/default.credentials.json')
+const credentials = require('../config/default.credentials.json')
 
 describe('infojobs()', () => {
   it('should be a high order function.', () => {

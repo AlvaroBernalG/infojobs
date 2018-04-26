@@ -70,5 +70,20 @@ Specifies a job id.
 #### run() | start() | go() `[object Promise]`
 Executes the query against the Infojobs RESTful API.
 
+#### pages() `[asyncIterator]`
+Returns an Async Iterator that allows you to iterate over the pages of the previous query.
+
+``` js
+
+const search = infojobs(crendentials);
+
+for async (const page of search({q: 'java'}).pages()) {
+  console.log("Page => ", page)
+}
+```
+## Requirements 
+
+Node.js version 10.
+
 ## License
 MIT © [Alvaro Bernal](https://github.com/AlvaroBernalG/)
