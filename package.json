@@ -1,7 +1,8 @@
 {
   "name": "infojobs",
   "version": "0.4.7",
-  "description": "Easy access to the biggest database of job offers in Spain through the Infojobs RESTful API.",
+  "description":
+    "Easy access to the biggest database of job offers in Spain through the Infojobs RESTful API.",
   "main": "index.js",
   "homepage": "https://github.com/alvarobernalg/infojobs.git",
   "repository": {
@@ -9,7 +10,7 @@
     "url": "https://github.com/alvarobernalg/infojobs.git"
   },
   "scripts": {
-    "test": "./node_modules/jest/bin/jest.js"
+    "test": "ava -v"
   },
   "keywords": [
     "infojobs",
@@ -23,27 +24,24 @@
     "portal",
     "job"
   ],
-  "engines": { "node" : "~10.0.0" },
+  "engines": {
+    "node": "~10.0.0"
+  },
   "author": {
     "name": "Alvaro Bernal Gimeno",
     "email": "alvaro.bernal.gimeno@gmail.com"
   },
   "license": "M.I.T",
   "devDependencies": {
+    "ava": "1.0.0-beta.4",
     "hoek": "^5.0.3",
-    "jest": "^20.0.4",
     "nock": "^9.2.5"
   },
   "dependencies": {
     "request": "^2.85.0"
   },
   "standard": {
-    "global": [
-      "it",
-      "expect",
-      "describe",
-      "test"
-    ]
+    "global": ["it", "expect", "describe", "test"]
   },
   "reveal": "true"
 }

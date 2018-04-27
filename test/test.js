@@ -1,68 +1,66 @@
-const fs = require('fs')
-const infojobs = require('../index.js')
-const nock = require("nock")
+const fs = require("fs");
+const infojobs = require("../index.js");
+const nock = require("nock");
+const test = require("ava");
 
-const credentials = require('../config/default.credentials.json')
+const credentials = require("../config/default.credentials.json");
 
-describe('infojobs()', () => {
-  it('should be a high order function.', () => {
-    expect(typeof infojobs(credentials) === 'function').toBe(true)
-  })
-})
+const nocker = nock("https://api.infojobs.net");
+const search = infojobs(credentials);
 
-describe('offer()', ()=> {
+test("infojobs() should be a high order function.", t => {
+  t.true(typeof infojobs(credentials) === "function");
+});
 
-  beforeEach(()=> {
-    nock('https://api.infojobs.net/api/1')
-      .get('/offer')
-      .reply(200, require('./data/mock.offer.json'));
-  })
+test("should return a promise", expect => {
+  nocker.get("/api/1/offer").reply(200, require("./data/mock.offer.json"));
 
-  it('should return a promise', ()=> {
-    expect(infojobs(credentials)().offer().run() instanceof Promise).toBe(true)
-  })
+  expect.true(
+    search()
+      .offer()
+      .run() instanceof Promise
+  );
+});
 
-  it('offer() should return the correct json.', async ()=> {
-    const search = infojobs(credentials)
-    const res = await search().offer().run().catch(console.log.bind(null, " Something went wrong "))
-    
-    expect(res).toEqual(require('./data/mock.offer.json'))
-  })
+test.before(() => {
+  nocker.get("/api/1/offer").reply(200, require("./data/mock.offer.json"));
+});
 
-  beforeEach(()=> {
-    this.query = {q: 'java'}
+test("offer() should return the correct json.", async t => {
+  const res = await search()
+    .offer()
+    .run();
 
-    nock('https://api.infojobs.net/api/1')
-      .get('/offer')
-      .query(this.query)
-      .reply(200, require('./data/mock.offer.query.json'));
-  })
+  t.deepEqual(res, require("./data/mock.offer.json"));
+});
 
-  it('offer([query]) should correctly query and return a json response.', async ()=> {
-    const search = infojobs(credentials)
-    const res = await search(this.query).offer().run().catch(console.log.bind(null, " Something went wrong "))
-    
-    expect(res).toEqual(require('./data/mock.offer.query.json'))
-  })
+test.before(() => {
+  nocker
+    .get("/api/1/offer")
+    .query({ q: "java" })
+    .reply(200, require("./data/mock.offer.query.json"));
+});
 
-})
+test("offer([query]) should correctly query and return a json response.", async t => {
+  const res = await search({ q: "java" })
+    .offer()
+    .run();
 
+  t.deepEqual(res, require("./data/mock.offer.query.json"));
+});
 
-describe('id()', ()=> {
+test.before(() => {
+  nocker
+    .get("/api/1/offer/3b830e44a9426fb3d1410b8618fdcb")
+    .reply(200, require("./data/mock.id.json"));
+});
 
-  beforeEach(()=> {
-    this.id = '3b830e44a9426fb3d1410b8618fdcb' 
-    nock('https://api.infojobs.net/api/1/offer')
-      .get('/'+ this.id)
-      .reply(200, require('./data/mock.id.json'));
+test("id([id]) should correctly return a json response.", async t => {
+  const search = infojobs(credentials);
+  const res = await search()
+    .offer()
+    .id("3b830e44a9426fb3d1410b8618fdcb")
+    .run();
 
-  })
-
-  it('id([id]) should correctly return a json response.', async ()=> {
-    const search = infojobs(credentials)
-    const res = await search().offer().id(this.id).run().catch(console.log.bind(null, " Something went wrong "))
-    
-    expect(res).toEqual(require('./data/mock.id.json'))
-  })
-
-})
+  t.deepEqual(res, require("./data/mock.id.json"));
+});
