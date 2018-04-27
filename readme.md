@@ -83,7 +83,7 @@ for async (const page of search({q: 'java'}).pages()) {
 ```
 ## Requirements 
 
-Node.js version 10.
+Node.js version >=10.0.0.
 
 ## License
 MIT © [Alvaro Bernal](https://github.com/AlvaroBernalG/)
