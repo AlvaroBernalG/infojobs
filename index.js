@@ -1,5 +1,5 @@
 const request = require('request')
-const { URL } = require('url')
+const { URL, URLSearchParams } = require('url')
 
 const api_url = 'https://api.infojobs.net/api/1'
 
@@ -37,11 +37,10 @@ const buildUrl = (base) => {
     url.pathname = `${url.pathname}/${path}`
   })
 
-  inner.addQuery = innerChained(ob => {
-    if (!url.search) url.search = '?'
-    Object.keys(ob).forEach(key => {
-      url.search = `${url.search}&${key}=${ob[key]}`
-    })
+  inner.addQuery = innerChained(query => {
+    const queryEntries = Object.entries(query)
+    const params = new URLSearchParams(queryEntries)
+    url.search = params.toString()
   })
 
   inner.toString = () => url.toString()
