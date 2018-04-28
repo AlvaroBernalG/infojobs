@@ -67,22 +67,34 @@ const infojobs = (auth) => {
 
     inner.id = innerChained(id => url.addPath(id))
 
-    inner.pages = async function*(from = 1, until) {
-
+    inner.pages = async function*(from, until) {
+      if (from === 0) throw new Error("From can't be 0.")
+      if (until < from) throw new Error('Until can\'t be greater than from') 
+      
+      
       let query = url.getQuery()
-      url.addQuery({...query, page: from })
+
+      if (until === undefined && from !== undefined) {
+        until = from 
+        from = 1
+      }
+
+      url.addQuery({...query, page: from || 1 })
       let res = await inner.go();
       yield res
-      until = until !== undefined ? until : res.totalPages 
 
-      while(res.currentPage < until) {
+      if (from === undefined && until === undefined) {
+        until = res.totalPages 
+        from = res.currentPage
+      }
+
+      while(from < until) {
         query = url.getQuery()
-        url.addQuery({...query, page: res.currentPage + 1 })
-        res = await inner.go();
-        yield res
+        url.addQuery({...query, page: from + 1 })
+        yield await inner.go();
+        from += 1
       }
     }
-
 
     inner.go = inner.start = inner.run = () => {
       const fullUrl = url.toString()
