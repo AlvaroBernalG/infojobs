@@ -1,14 +1,21 @@
 const request = require('request')
 const { URL, URLSearchParams } = require('url')
 
-const api_url = 'https://api.infojobs.net/api/1'
-
-const resources = [
-  'offer',
-  'killerquestion',
-  'question',
-  'openquestion'
-]
+const defaults = {
+  api_url: 'https://api.infojobs.net/api/1',
+  resources: [
+    'application',
+    'dictionary',
+    'candidate',
+    'skillcategory',
+    'offer',
+    'id',
+    'killerquestion',
+    'question',
+    'openquestion',
+    'type'
+  ]
+}
 
 const chain = instance => func => (...args) => {
   func.call(func, ...args)
@@ -39,8 +46,8 @@ const buildUrl = (base) => {
 
   inner.addQuery = innerChained(query => {
     url.query = query
-    url.queryEntries = Object.entries(query)
-    const params = new URLSearchParams(url.queryEntries)
+    const queryEntries = Object.entries(query)
+    const params = new URLSearchParams(queryEntries)
     url.search = params.toString()
   })
 
@@ -51,21 +58,21 @@ const buildUrl = (base) => {
   return inner
 }
 
-const infojobs = (auth) => {
-  const get = requester(auth)
-  return () => {
+const infojobs = (auth, resources = defaults.resources, api_url = defaults.api_url) => () => {
+    const get = requester(auth)
     const url = buildUrl(api_url)
     const inner = {}
     const innerChained = chain(inner)
 
     resources.forEach(resource => {
-      inner[resource] = innerChained( searchQuery => {
+      inner[resource] = innerChained( query => {
         url.addPath(resource)
-        searchQuery && url.addQuery(searchQuery)
+        if(typeof query === 'string') return url.addPath(query)
+        if (query) url.addQuery(query)
       })
     })
 
-    inner.id = innerChained(id => url.addPath(id))
+    inner.id = innerChained(url.addPath)
 
     inner.pages = async function*(from, until) {
       if (from === 0) throw new Error("From can't be 0.")
@@ -102,7 +109,6 @@ const infojobs = (auth) => {
     }
 
     return inner
-  }
 }
 
 module.exports = infojobs

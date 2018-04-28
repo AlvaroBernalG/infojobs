@@ -13,6 +13,15 @@ test('infojobs() should be a high order function.', t => {
   t.true(typeof infojobs(credentials) === 'function')
 })
 
+test.before(()=>{
+  nocker.get('/api/1/test/awesome').reply(200, {result: "works"})
+})
+
+test('infojobs() should correctly combine multiple resources.', async t => {
+  const res = await infojobs(credentials, ['test', 'awesome'])().test().awesome().run()
+
+  t.deepEqual(res, {result : "works"})
+})
 test('should return a promise', expect => {
   nocker.get('/api/1/offer').reply(200, require('./data/mock.offer.json'))
 
@@ -56,18 +65,33 @@ test.before(() => {
     .reply(200, require('./data/mock.id.json'))
 })
 
-test('id([id]) should correctly return a json response.', async t => {
+test('search([id]) should correctly return a json response.', async t => {
   const res = await search()
-    .offer()
-    .id('3b830e44a9426fb3d1410b8618fdcb')
+    .offer('3b830e44a9426fb3d1410b8618fdcb')
     .run()
 
   t.deepEqual(res, require('./data/mock.id.json'))
 })
 
 test.before(() => {
-  const pageNumMocks = 3
-  range(1, 3).forEach( index =>{
+  nocker
+    .get('/api/1/offer/3b830e44a9426fb3d1410b8618fdcb')
+    .reply(200, require('./data/mock.id.json'))
+})
+
+test('id([id]) should correctly return a json response.', async t => {
+  const res = await search()
+    .offer()
+      .id('3b830e44a9426fb3d1410b8618fdcb')
+    .run()
+
+  t.deepEqual(res, require('./data/mock.id.json'))
+})
+
+test.before(() => {
+  const fromNumMocks = 1
+  const untilNumMocks = 3
+  range(fromNumMocks, untilNumMocks).forEach( index =>{
     nocker.get('/api/1/offer')
       .query({ page: index })
       .reply(200, require(`./data/mock.offer.pages.${index}.json`))
