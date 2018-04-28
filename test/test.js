@@ -7,6 +7,8 @@ const credentials = require('../config/default.credentials.json')
 const nocker = nock('https://api.infojobs.net')
 const search = infojobs(credentials)
 
+const range = (from, to ) => new Array(to - from + 1).fill(0).map((e, i) => i + from)
+
 test('infojobs() should be a high order function.', t => {
   t.true(typeof infojobs(credentials) === 'function')
 })
@@ -64,29 +66,37 @@ test('id([id]) should correctly return a json response.', async t => {
 })
 
 test.before(() => {
-  nocker
-    .get('/api/1/offer')
-    .query({ page: 1 })
-    .reply(200, require('./data/mock.offer.pages.1.json'))
-
-  nocker
-    .get('/api/1/offer')
-    .query({ page: 2 })
-    .reply(200, require('./data/mock.offer.pages.2.json'))
-
-  nocker
-    .get('/api/1/offer')
-    .query({ page: 3 })
-    .reply(200, require('./data/mock.offer.pages.3.json'))
+  const pageNumMocks = 3
+  range(1, 3).forEach( index =>{
+    nocker.get('/api/1/offer')
+      .query({ page: index })
+      .reply(200, require(`./data/mock.offer.pages.${index}.json`))
+  })
 })
 
 test('pages() should correctly loop through all the results.', async t => {
-  const search = infojobs(credentials)
   let counter = 1
   for await (const page of search().offer().pages(3)) {
     t.deepEqual(page, require(`./data/mock.offer.pages.${counter}.json`))
     counter += 1
   }
+})
 
+test.before(() => {
+  const fromNumMocks = 3
+  const untilNumMocks = 6
+  range(fromNumMocks, untilNumMocks).forEach(index =>{
+    nocker.get('/api/1/offer')
+      .query({ page: index })
+      .reply(200, require(`./data/mock.offer.pages.${index}.json`))
+  })
+})
+
+test('pages(3,6) should correctly loop through the specified boundaries.', async t => {
+  let counter = 3
+  for await (const page of search().offer().pages(3, 6)) {
+    t.deepEqual(page, require(`./data/mock.offer.pages.${counter}.json`))
+    counter += 1
+  }
 })
 
