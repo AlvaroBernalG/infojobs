@@ -105,5 +105,9 @@ Returns an Async Iterator that allows you to iterate through the pages.
 
 Node.js version >=10.0.0.
 
+## Contributing
+
+All contributions are welcome.
+
 ## License
 MIT © [Alvaro Bernal](https://github.com/AlvaroBernalG/)
