@@ -56,7 +56,7 @@ search()
   })
   .run()
   .then( response => {
-      console.log(response) // => by default you receive 20 results.
+      console.log(response) // 
   }).catch(console.log)
 ```
 
@@ -90,7 +90,7 @@ you can use the pages() function like so:
 Initializes the library and performs the authentication.
 
 #### offer(query[object optional]) `[object infojobs]`  
-If no query object is passed, it will by default retrieve the first 20 job offers randomly found.
+You can find the list of available query fields [here](https://developer.infojobs.net/documentation/operation/offer-list-1.xhtml).
 
 #### id(id[string optional]) `[object infojobs]`  
 Specifies a job id.
