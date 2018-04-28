@@ -38,10 +38,13 @@ const buildUrl = (base) => {
   })
 
   inner.addQuery = innerChained(query => {
-    const queryEntries = Object.entries(query)
-    const params = new URLSearchParams(queryEntries)
+    url.query = query
+    url.queryEntries = Object.entries(query)
+    const params = new URLSearchParams(url.queryEntries)
     url.search = params.toString()
   })
+
+  inner.getQuery = () => url.query
 
   inner.toString = () => url.toString()
 
@@ -50,13 +53,13 @@ const buildUrl = (base) => {
 
 const infojobs = (auth) => {
   const get = requester(auth)
-  return (searchQuery) => {
+  return () => {
     const url = buildUrl(api_url)
     const inner = {}
     const innerChained = chain(inner)
 
     resources.forEach(resource => {
-      inner[resource] = innerChained(() => {
+      inner[resource] = innerChained( searchQuery => {
         url.addPath(resource)
         searchQuery && url.addQuery(searchQuery)
       })
@@ -64,11 +67,19 @@ const infojobs = (auth) => {
 
     inner.id = innerChained(id => url.addPath(id))
 
-    inner.pages = async function*() {
-      let pageNumber = 0
-      while(true) {
-        yield await inner.go({page: pageNumber });
-        pageNumber += 1
+    inner.pages = async function*(from = 1, until) {
+
+      let query = url.getQuery()
+      url.addQuery({...query, page: from })
+      let res = await inner.go();
+      yield res
+      until = until !== undefined ? until : res.totalPages 
+
+      while(res.currentPage < until) {
+        query = url.getQuery()
+        url.addQuery({...query, page: res.currentPage + 1 })
+        res = await inner.go();
+        yield res
       }
     }
 

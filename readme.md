@@ -45,6 +45,21 @@ search()
   }).catch(console.log)
 ```
 
+Some properties accept multiple options, in that case you can pass a property array like so:
+```js
+
+search()
+  .offer({
+    q: ['Java developer', 'Analista'],
+    province: ['Madrid', 'Barcelona'],
+    companyName: 'Santander Group'
+  })
+  .run()
+  .then( response => {
+      console.log(response) // => by default you receive 20 results.
+  }).catch(console.log)
+```
+
 You can retrieve a specific job offer by specifying its id using the id method:
 ```js
 search()
@@ -56,31 +71,36 @@ search()
   }).catch(console.log)
 ```
 
+Unless specified, the Infojobs API will return 20 results per query. If you want to loop through all the results
+you can use the pages() function like so:
+
+``` js
+  const search = infojobs(credentials)
+  const javaJobsInMadrid = search().offer({q: 'java', province: "Madrid"})
+
+  for await (const page of javaJobsInMadrid.pages()) {
+    console.log("Page => ", page) //
+  }
+```
+
+
 ## API
 
 #### infojobs(credentials[object required]) `[object infojobs]`
 Initializes the library and performs the authentication.
 
-#### offer(query[optional]) `[object infojobs]`  
+#### offer(query[object optional]) `[object infojobs]`  
 If no query object is passed, it will by default retrieve the first 20 job offers randomly found.
 
-#### id(id [string] )[optional]) `[object infojobs]`  
+#### id(id[string optional]) `[object infojobs]`  
 Specifies a job id.
 
 #### run() | start() | go() `[object Promise]`
 Executes the query against the Infojobs RESTful API.
 
-#### pages() `[asyncIterator]`
-Returns an Async Iterator that allows you to iterate over the pages of the previous query.
+#### pages(from[number optional], until[number optional]) `[asyncIterator]`
+Returns an Async Iterator that allows you to iterate through the pages.
 
-``` js
-
-const search = infojobs(crendentials);
-
-for async (const page of search({q: 'java'}).pages()) {
-  console.log("Page => ", page)
-}
-```
 ## Requirements 
 
 Node.js version >=10.0.0.
