@@ -58,7 +58,12 @@ const buildUrl = (base) => {
   return inner
 }
 
-const infojobs = (auth, resources = defaults.resources, api_url = defaults.api_url) => () => {
+const infojobs = (
+    auth, 
+    resources = defaults.resources, 
+    api_url = defaults.api_url
+  ) => () => {
+
     const get = requester(auth)
     const url = buildUrl(api_url)
     const inner = {}
@@ -75,9 +80,8 @@ const infojobs = (auth, resources = defaults.resources, api_url = defaults.api_u
     inner.id = innerChained(url.addPath)
 
     inner.pages = async function*(from, until) {
-      if (from === 0) throw new Error("From can't be 0.")
+      if (from <= 0) throw new Error("`From` must be greater 0.")
       if (until < from) throw new Error('Until can\'t be greater than from') 
-      
       
       let query = url.getQuery()
 
