@@ -1,8 +1,7 @@
 {
   "name": "infojobs",
   "version": "0.6.0",
-  "description":
-    "Easy access to the biggest database of job offers in Spain through the Infojobs RESTful API.",
+  "description": "Easy access to the biggest database of job offers in Spain through the Infojobs RESTful API.",
   "main": "index.js",
   "homepage": "https://github.com/alvarobernalg/infojobs.git",
   "repository": {
@@ -10,7 +9,8 @@
     "url": "https://github.com/alvarobernalg/infojobs.git"
   },
   "scripts": {
-    "test": "ava -v"
+    "test": "ava -v",
+    "format": "prettier-eslint --write \"./test/*.js\" && prettier-eslint --write \"./index.js\" "
   },
   "keywords": [
     "infojobs",
@@ -35,13 +35,19 @@
   "devDependencies": {
     "ava": "1.0.0-beta.4",
     "hoek": "^5.0.3",
-    "nock": "^9.2.5"
+    "nock": "^9.2.5",
+    "prettier-eslint-cli": "^4.7.1"
   },
   "dependencies": {
     "request": "^2.85.0"
   },
   "standard": {
-    "global": ["it", "expect", "describe", "test"]
+    "global": [
+      "it",
+      "expect",
+      "describe",
+      "test"
+    ]
   },
   "reveal": "true"
 }
