@@ -2,7 +2,7 @@ const request = require('request')
 const { URL, URLSearchParams } = require('url')
 
 const defaults = {
-  api_url: 'https://api.infojobs.net/api/1',
+  apiUrl: 'https://api.infojobs.net/api/1',
   resources: [
     'application',
     'dictionary',
@@ -59,20 +59,19 @@ const buildUrl = (base) => {
 }
 
 const infojobs = (
-    auth, 
-    resources = defaults.resources, 
-    api_url = defaults.api_url
+    auth,
+    resources = defaults.resources,
+    apiUrl = defaults.apiUrl
   ) => () => {
-
     const get = requester(auth)
-    const url = buildUrl(api_url)
+    const url = buildUrl(apiUrl)
     const inner = {}
     const innerChained = chain(inner)
 
     resources.forEach(resource => {
-      inner[resource] = innerChained( query => {
+      inner[resource] = innerChained(query => {
         url.addPath(resource)
-        if(typeof query === 'string') return url.addPath(query)
+        if (typeof query === 'string') return url.addPath(query)
         if (query) url.addQuery(query)
       })
     })
@@ -80,29 +79,28 @@ const infojobs = (
     inner.id = innerChained(url.addPath)
 
     inner.pages = async function*(from, until) {
-      if (from <= 0) throw new Error("`From` must be greater 0.")
-      if (until < from) throw new Error('Until can\'t be greater than from') 
-      
+      if (from <= 0) throw new Error('`From` must be greater 0.')
+      if (until < from) throw new Error('Until can\'t be greater than from')
+
       let query = url.getQuery()
 
       if (until === undefined && from !== undefined) {
-        until = from 
+        until = from
         from = 1
       }
-
-      url.addQuery({...query, page: from || 1 })
-      let res = await inner.go();
+      url.addQuery({ ...query, page: from || 1 })
+      let res = await inner.go()
       yield res
 
       if (from === undefined && until === undefined) {
-        until = res.totalPages 
+        until = res.totalPages
         from = res.currentPage
       }
 
-      while(from < until) {
+      while (from < until) {
         query = url.getQuery()
-        url.addQuery({...query, page: from + 1 })
-        yield await inner.go();
+        url.addQuery({ ...query, page: from + 1 })
+        yield await inner.go()
         from += 1
       }
     }
@@ -113,6 +111,6 @@ const infojobs = (
     }
 
     return inner
-}
+  }
 
 module.exports = infojobs
