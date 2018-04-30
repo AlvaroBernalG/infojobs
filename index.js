@@ -42,7 +42,7 @@ const buildUrl = base => {
   const innerChained = chain(inner);
 
   inner.addPath = innerChained(path => {
-    url.pathname = `${url.pathname}/${path}`;
+    url.pathname = url.pathname === "/" ? path : `${url.pathname}/${path}`;
   });
 
   inner.addQuery = innerChained(query => {
@@ -80,7 +80,7 @@ const infojobs = (
   inner.id = innerChained(url.addPath);
 
   inner.pages = async function*(from, until) {
-    if (from <= 0) throw new Error("`From` must be greater 0.");
+    if (from <= 0) throw new Error("`From` must be greater than 0.");
     if (until < from) throw new Error("Until can't be greater than from");
 
     let query = url.getQuery();
