@@ -41,5 +41,10 @@
   "dependencies": {
     "request": "^2.85.0"
   },
-  "reveal": "true"
+  "reveal": "true",
+  "files": [
+    "package.json",
+    "readme.me",
+    "index.js"
+  ]
 }
