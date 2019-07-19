@@ -18,14 +18,6 @@ test.before(() => {
   nocker.get("/api/1/test/awesome").reply(200, { result: "works" });
 });
 
-test("infojobs() should correctly combine multiple resources.", async t => {
-  const res = await infojobs(credentials, ["test", "awesome"])()
-    .test()
-    .awesome()
-    .run();
-
-  t.deepEqual(res, { result: "works" });
-});
 test("should return a promise", expect => {
   nocker.get("/api/1/offer").reply(200, require("./data/mock.offer.json"));
 

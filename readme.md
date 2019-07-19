@@ -86,7 +86,7 @@ you can use the pages() function like so:
 
 ## API
 
-#### infojobs(credentials[object required]) `[object infojobs]`
+#### infojobs(credentials[object required], config[object]) `[object infojobs]`
 Initializes the library and performs the authentication.
 
 #### offer(query[object optional]) `[object infojobs]`  

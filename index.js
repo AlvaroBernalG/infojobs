@@ -1,20 +1,27 @@
 const request = require("request");
 const { URL, URLSearchParams } = require("url");
+const pkg = require('./package.json');
 
-const defaults = {
-  apiUrl: "https://api.infojobs.net/api/1",
-  resources: [
-    "application",
-    "dictionary",
-    "candidate",
-    "skillcategory",
-    "offer",
-    "id",
-    "killerquestion",
-    "question",
-    "openquestion",
-    "type"
-  ]
+const resources = [
+  "application",
+  "dictionary",
+  "candidate",
+  "skillcategory",
+  "offer",
+  "id",
+  "killerquestion",
+  "question",
+  "openquestion",
+  "type"
+];
+
+const defaultConfiguration = {
+  debug: false,
+  apiUrl: "https://api.infojobs.net/api/1"
+};
+
+const headers = {
+  'User-Agent': `Node Infojobs ${pkg.version}`
 };
 
 const chain = instance => func => (...args) => {
@@ -22,9 +29,8 @@ const chain = instance => func => (...args) => {
   return instance;
 };
 
-const requester = auth => url =>
-  new Promise((resolve, reject) => {
-    request(url, (err, response, body) => {
+const requester = auth => url => new Promise((resolve, reject) => {
+    request({url, headers,}, (err, response, body) => {
       if (err) return reject(err);
       try {
         const res = JSON.parse(body);
@@ -61,11 +67,11 @@ const buildUrl = base => {
 
 const infojobs = (
   auth,
-  resources = defaults.resources,
-  apiUrl = defaults.apiUrl
+  config = defaultConfiguration
 ) => () => {
+  request.debug = config.debug;
   const get = requester(auth);
-  const url = buildUrl(apiUrl);
+  const url = buildUrl(config.apiUrl);
   const inner = {};
   const innerChained = chain(inner);
 
