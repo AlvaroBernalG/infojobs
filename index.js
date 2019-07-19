@@ -65,13 +65,11 @@ const buildUrl = base => {
   return inner;
 };
 
-const infojobs = (
-  auth,
-  config = defaultConfiguration
-) => () => {
-  request.debug = config.debug;
+const infojobs = (auth, conf) => () => {
+  conf = {...defaultConfiguration, ...conf};
+  request.debug = conf.debug;
   const get = requester(auth);
-  const url = buildUrl(config.apiUrl);
+  const url = buildUrl(conf.apiUrl);
   const inner = {};
   const innerChained = chain(inner);
 
